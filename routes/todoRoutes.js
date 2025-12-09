@@ -5,7 +5,6 @@ const Todo = require('../models/Todo');
 // Create a new todo
 router.post('/', async (req, res) => {
   try {
-    console.log('Received POST request:', req.body);
     const { title, description } = req.body;
 
     if (!title) {
@@ -20,17 +19,14 @@ router.post('/', async (req, res) => {
       description
     });
 
-    console.log('Saving todo:', newTodo);
     await newTodo.save();
-    console.log('Todo saved successfully:', newTodo);
-
     res.status(201).json({
       success: true,
       message: 'Todo created successfully',
       data: newTodo
     });
   } catch (error) {
-    console.error('Error creating todo:', error);
+    console.error('Error creating todo:', error.message);
     res.status(500).json({
       success: false,
       message: 'Failed to create todo',
@@ -42,17 +38,13 @@ router.post('/', async (req, res) => {
 // Get all todos
 router.get('/', async (req, res) => {
   try {
-    console.log('GET request received for all todos');
-    // Cosmos DB에서 정렬 없이 먼저 테스트
     const todos = await Todo.find();
-    console.log('Todos fetched successfully:', todos.length, 'items');
     res.status(200).json({
       success: true,
       data: todos
     });
   } catch (error) {
-    console.error('Error fetching todos:', error);
-    console.error('Full error:', error);
+    console.error('Error fetching todos:', error.message);
     res.status(500).json({
       success: false,
       message: 'Failed to fetch todos',
